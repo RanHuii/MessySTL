@@ -9,6 +9,24 @@ namespace MessySTL
     struct _true_type {};
     struct _false_type {};
 
+    /*
+    * This type traits help compiler construct and destory class 
+    * If a class has trivial constructor, assignment operator, 
+    * destructor, it will be more efficient to use function to 
+    * directly manipulate the memory e.g. malloc() and memcpy(),
+    * instead of using the constructor.
+    * 
+    * If the class doesn't have trivial constructor etc, we have
+    * to call the constructor.
+    * 
+    */
+
+    /// <summary>
+    /// Use _false_type as the default type
+    /// so that no class will be failed due to misjuedgement on
+    /// trivial and non-trivial object
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     template<class T>
     struct _type_traits {
         typedef _false_type     has_trivial_default_constructor;
