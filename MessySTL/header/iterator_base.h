@@ -119,6 +119,8 @@ namespace MessySTL {
     template <class Iterator>
     inline typename iterator_traits<Iterator>::difference_type*
         difference_type(const Iterator&) {
+
+        // return a temporary object
         return static_cast<typename iterator_traits<Iterator>::difference_type*>(0);
 
     }
@@ -126,6 +128,8 @@ namespace MessySTL {
     template <class Iterator>
     inline typename iterator_traits<Iterator>::value_type*
         value_type(const Iterator&) {
+
+        // return a temporary object
         return static_cast<typename iterator_traits<Iterator>::value_type*>(0);
 
     }

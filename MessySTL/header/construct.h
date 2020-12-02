@@ -51,17 +51,18 @@ namespace MessySTL {
         _destroy_aux(first, last, trivial_destructor()); // trivial_destructor() is a temporary struct of true or false type
     }
 
-    template<class ForwardIterator, class T>
+    template<class ForwardIterator>
     void _destroy_aux(ForwardIterator first, ForwardIterator last, _true_type)
     {
     }
 
-    template<class ForwardIterator, class T>
+    template<class ForwardIterator>
     void _destroy_aux(ForwardIterator first, ForwardIterator last, _false_type)
     {
-        while (first != last)
+        while (first < last)
         {
-            destroy(first++);
+            destroy(&*first);
+            first++;
         }
     }
 
