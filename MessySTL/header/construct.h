@@ -12,6 +12,12 @@
 */
 
 namespace MessySTL {
+
+    template<class T>
+    void construct(T* p)
+    {
+        new(p)T();
+    }
     /// <summary>
     /// 
     /// </summary>

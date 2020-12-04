@@ -3,6 +3,7 @@
 #define ALLOCATOR_H_
 
 #include <new>
+#include "construct.h"
 namespace MessySTL
 {
     template<class T>
@@ -76,14 +77,19 @@ namespace MessySTL
         }
         operator delete(ptr);
     }
+
     template<class T>
     inline void allocator<T>::construct(T* ptr)
     {
+        MessySTL::construct(ptr);
     }
+
     template<class T>
     inline void allocator<T>::construct(T* ptr, const T& value)
     {
+        MessySTL::construct(ptr, value);
     }
+
     template<class T>
     inline void allocator<T>::construct(T* ptr, T&& value)
     {
@@ -91,10 +97,12 @@ namespace MessySTL
     template<class T>
     inline void allocator<T>::destroy(T* ptr)
     {
+        MessySTL::destroy(ptr);
     }
     template<class T>
     inline void allocator<T>::destroy(T* first, T* last)
     {
+        MessySTL::destroy(first, last);
     }
 }
 #endif // !ALLOCATOR_H_
