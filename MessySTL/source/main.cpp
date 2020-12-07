@@ -37,10 +37,15 @@ int main()
 {
     MessySTL::_false_type false_type;
 
-    int a;
-
-    fn(a);
-    std::cout << std::endl;
-    fn(0);
+    char* p = new char('a');
+    std::cout << p << std::endl;
+    int* q = (int*)p;
+    char* w = (char*)q;
+    std::cout << q << std::endl;
+    std::cout << w << std::endl;
+    delete p;
+   /* delete w;
+    delete q;*/
+    
 
 }

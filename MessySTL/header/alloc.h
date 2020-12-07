@@ -32,18 +32,23 @@ namespace MessySTL
 
 	class alloc
 	{
+    public:
+        static void*    allocate(size_t bytes);
+        static void     deallocate(void* p, size_t n);
+        static void*    reallocate(void* p, size_t old_size, size_t new_size);
+
 	private:
+		static size_t   Round_up(size_t bytes);
+		static void*    Refill(size_t size);
+		static size_t   Find_Index(size_t bytes);
+		static char*    Chunk_alloc(size_t size, size_t& nobj);
 
-		static char* m_pStart;
-		static char* m_pEnd;
-		static size_t m_sTotal_heap_size;
-		static Free_list* m_free_list[E_LIST_NUM::LIST_NUM];
-
-		static size_t Round_up(size_t bytes);
-		static void* Refill(size_t bytes);
-		static size_t Find_Index(size_t byte);
-		static void*  allocate(size_t bytes);
-		static char*  Chunk_alloc(size_t bytes, size_t& nobj);
+    private:
+        static char*        m_pStart;
+        static char*        m_pEnd;
+        static size_t       m_sTotal_heap_size;
+        static Free_list*   m_free_list[E_LIST_NUM::LIST_NUM];
+   
 
 	};
 	// initialize static data members
@@ -55,14 +60,21 @@ namespace MessySTL
 		nullptr, nullptr, nullptr, nullptr, nullptr, 
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
+
+    // round up bytes to a multiple of 8
 	inline size_t alloc::Round_up(size_t bytes)
 	{
 		return (bytes + E_Align::ALIGN - 1) & (~E_Align::ALIGN - 1);
 	};
-    inline size_t alloc::Find_Index(size_t byte)
+
+    // Find index in the free_list given a byte
+    inline size_t alloc::Find_Index(size_t bytes)
 	{
-		return Round_up(byte) / 8 - 1;
+        return (bytes + E_Align::ALIGN - 1) / (E_Align::ALIGN) - 1;
 	};
+
+    // Allocate memory of size bytes
+    // If bytes is greater than the maximum size of bytes, use std::allocate
     inline void* alloc::allocate(size_t bytes)
 	{
         
@@ -83,15 +95,67 @@ namespace MessySTL
         return (void*)result;
 	}
 
-    inline void* alloc::Refill(size_t bytes)
+    // free the memory pointed at p and have size n
+    inline void alloc::deallocate(void* p, size_t n)
     {
-        size_t num_block = E_NUM_BLOCK::NUM_BLOCK;
-        char* result = Chunk_alloc(bytes, num_block);
+        if (E_MAX_BYTE::MAX_BYTE < n)
+        {
+            std::free(p);
+            return;
+        }
+
+        Free_list* temp = (Free_list*)p;
+        Free_list* cur_node = m_free_list[Find_Index(n)];
+        temp->next = cur_node;
+        cur_node = temp;
     }
 
-    inline char*  alloc::Chunk_alloc(size_t bytes, size_t& nobj)
+    inline void* alloc::reallocate(void* p, size_t old_size, size_t new_size)
     {
-        size_t total_byte = bytes * nobj;
+        alloc::deallocate(p, old_size);
+        p = alloc::allocate(new_size);
+        return p;
+    }
+
+    inline void* alloc::Refill(size_t size)
+    {
+        size_t num_block = E_NUM_BLOCK::NUM_BLOCK;
+        char* start_addr = Chunk_alloc(size, num_block);
+        
+
+        if (1 == num_block)
+        {
+            return start_addr;
+        }
+        Free_list* cur_obj = m_free_list[Find_Index(size)];
+        Free_list *next_obj, *result;
+        // return the 1st available address.
+        result = (Free_list*)start_addr;
+        // mark the 2nd available address
+        cur_obj = next_obj = (Free_list*)(start_addr + size);
+        
+        for (size_t i = 1; i++;)
+        {
+            // next_obj chops memory 
+            next_obj = (Free_list*)((char*)next_obj + size);
+
+            if (num_block - 1 == i)
+            {
+                cur_obj->next = nullptr;
+                break;
+            }
+            else
+            {
+                // move the current pointer to the next memory
+                cur_obj->next = next_obj;
+            }
+        }
+        return result;
+    }
+
+    inline char*  alloc::Chunk_alloc(size_t size, size_t& nobj)
+    {
+        size_t total_byte = size * nobj;
         size_t byte_left = m_pStart - m_pEnd;
         char* result = m_pStart;
         if (byte_left >= total_byte)
@@ -99,11 +163,11 @@ namespace MessySTL
             m_pStart += total_byte;
             return result;
         }
-        else if (byte_left >= bytes)
+        else if (byte_left >= size)
         {
             // how many blocks can be allocated.
-            nobj = byte_left / bytes;
-            total_byte = nobj * bytes;
+            nobj = byte_left / size;
+            total_byte = nobj * size;
             m_pStart += total_byte;
             return result;
         }
@@ -124,8 +188,8 @@ namespace MessySTL
                 // not enough space in the heap
                 
                 Free_list* current_node, *p;
-                // Search memory on the right nodes. if bytes is 80, then we search 88, 96...
-                for (size_t i = bytes; i <= E_MAX_BYTE::MAX_BYTE; i + E_Align::ALIGN)
+                // Search memory on the right nodes. if size is 80, then we search 88, 96...
+                for (size_t i = size; i <= E_MAX_BYTE::MAX_BYTE; i + E_Align::ALIGN)
                 {
                     current_node = m_free_list[Find_Index(i)];
                     if (current_node != nullptr)
@@ -134,7 +198,7 @@ namespace MessySTL
                         m_pEnd = m_pStart+ i;
                         p = current_node;
                         current_node = current_node->next;
-                        return (Chunk_alloc(bytes, nobj));
+                        return (Chunk_alloc(size, nobj));
                     }
                 }
                 printf("out of memory");
@@ -143,7 +207,7 @@ namespace MessySTL
             }
             m_sTotal_heap_size += byte_to_get;
             m_pEnd = m_pStart + byte_to_get;
-            return (Chunk_alloc(bytes, nobj));
+            return (Chunk_alloc(size, nobj));
         }
 
     }

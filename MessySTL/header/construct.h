@@ -57,6 +57,7 @@ namespace MessySTL {
         _destroy_aux(first, last, trivial_destructor()); // trivial_destructor() is a temporary struct of true or false type
     }
 
+    // if the object has trivial destrcutor, the program doesn't need to do anything
     template<class ForwardIterator>
     void _destroy_aux(ForwardIterator first, ForwardIterator last, _true_type)
     {
