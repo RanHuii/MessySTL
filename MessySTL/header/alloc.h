@@ -54,8 +54,8 @@ namespace MessySTL
 	// initialize static data members
 	char* alloc::m_pStart = nullptr;
 	char* alloc::m_pEnd = nullptr;
-	size_t alloc::m_sTotal_heap_size = 0;
-	Free_list* alloc::m_free_list[E_LIST_NUM::LIST_NUM] = {
+    size_t alloc::m_sTotal_heap_size = 0;
+    Free_list* alloc::m_free_list[E_LIST_NUM::LIST_NUM] = {
 		nullptr, nullptr, nullptr, nullptr, nullptr, 
 		nullptr, nullptr, nullptr, nullptr, nullptr, 
 		nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
@@ -153,7 +153,7 @@ namespace MessySTL
         return result;
     }
 
-    inline char*  alloc::Chunk_alloc(size_t size, size_t& nobj)
+    inline char* alloc::Chunk_alloc(size_t size, size_t& nobj)
     {
         size_t total_byte = size * nobj;
         size_t byte_left = m_pStart - m_pEnd;
@@ -189,7 +189,7 @@ namespace MessySTL
                 
                 Free_list* current_node, *p;
                 // Search memory on the right nodes. if size is 80, then we search 88, 96...
-                for (size_t i = size; i <= E_MAX_BYTE::MAX_BYTE; i + E_Align::ALIGN)
+                for (size_t i = size; i <= E_MAX_BYTE::MAX_BYTE; i += E_Align::ALIGN)
                 {
                     current_node = m_free_list[Find_Index(i)];
                     if (current_node != nullptr)

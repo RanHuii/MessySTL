@@ -129,7 +129,8 @@ namespace MessySTL {
     inline typename iterator_traits<Iterator>::value_type*
         value_type(const Iterator&) {
 
-        // return a temporary object
+        // return a pointer to the temporary object
+        // why value type doesn't return the actually type but a pointer to the type
         return static_cast<typename iterator_traits<Iterator>::value_type*>(0);
 
     }

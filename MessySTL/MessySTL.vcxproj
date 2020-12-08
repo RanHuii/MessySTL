@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="header\algorithm.h" />
     <ClInclude Include="header\alloc.h" />
     <ClInclude Include="header\allocator.h" />
     <ClInclude Include="header\construct.h" />
     <ClInclude Include="header\iterator_base.h" />
+    <ClInclude Include="header\pool_alloc.h" />
     <ClInclude Include="header\type_traits.h" />
+    <ClInclude Include="header\uninitialized_function.h" />
+    <ClInclude Include="header\vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp" />

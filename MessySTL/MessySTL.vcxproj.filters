@@ -27,7 +27,19 @@
     <ClInclude Include="header\allocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\uninitialized_function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\algorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="header\alloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\pool_alloc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

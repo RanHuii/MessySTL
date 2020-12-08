@@ -1,8 +1,8 @@
 #include <iostream>
-#include <vector>
+#include "../header/vector.h"
 #include "../header/iterator_base.h"
 #include "../header/construct.h"
-
+#include "../header/pool_alloc.h"
 
 struct A
 {
@@ -33,19 +33,14 @@ template <class T> void fn(T&& x) {
     overloaded(std::forward<T>(x));  // rvalue if argument is rvalue
 }
 
+
 int main()
 {
-    MessySTL::_false_type false_type;
+    typedef MessySTL::pool_alloc<int> alloc;
+    MessySTL::vector<int, MessySTL::pool_alloc<int>> vec;
+    MessySTL::vector<int, MessySTL::pool_alloc<int>> vec1(3);
 
-    char* p = new char('a');
-    std::cout << p << std::endl;
-    int* q = (int*)p;
-    char* w = (char*)q;
-    std::cout << q << std::endl;
-    std::cout << w << std::endl;
-    delete p;
-   /* delete w;
-    delete q;*/
-    
-
+    MessySTL::vector<int, MessySTL::pool_alloc<int>>::iterator it = vec1.begin();
+    std::cout << vec1.size() << std::endl;
+    std::cout << *it << std::endl;
 }
