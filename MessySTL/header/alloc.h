@@ -33,8 +33,8 @@ namespace MessySTL
 	class alloc
 	{
     public:
-        static void*    allocate(size_t bytes);
-        static void     deallocate(void* p, size_t n);
+        static void*    allocate(size_t byte);
+        static void     deallocate(void* p, size_t byte);
         static void*    reallocate(void* p, size_t old_size, size_t new_size);
 
 	private:
@@ -75,19 +75,19 @@ namespace MessySTL
 
     // Allocate memory of size bytes
     // If bytes is greater than the maximum size of bytes, use std::allocate
-    inline void* alloc::allocate(size_t bytes)
+    inline void* alloc::allocate(size_t byte)
 	{
         
-		if (bytes > E_MAX_BYTE::MAX_BYTE)
+		if (byte > E_MAX_BYTE::MAX_BYTE)
 		{
-			return std::malloc(bytes);
+			return std::malloc(byte);
 		}
-        Free_list* current_node = m_free_list[Find_Index(bytes)];
+        Free_list* current_node = m_free_list[Find_Index(byte)];
 
         Free_list* result = current_node;
         if (current_node == nullptr)
         {
-            void* r = Refill(Round_up(bytes));
+            void* r = Refill(Round_up(byte));
             return r;
         }
 
@@ -95,25 +95,25 @@ namespace MessySTL
         return (void*)result;
 	}
 
-    // free the memory pointed at p and have size n
-    inline void alloc::deallocate(void* p, size_t n)
+    // free the memory pointed at p and have size of n bytes
+    inline void alloc::deallocate(void* p, size_t byte)
     {
-        if (E_MAX_BYTE::MAX_BYTE < n)
+        if (E_MAX_BYTE::MAX_BYTE < byte)
         {
             std::free(p);
             return;
         }
 
         Free_list* temp = (Free_list*)p;
-        Free_list* cur_node = m_free_list[Find_Index(n)];
+        Free_list* cur_node = m_free_list[Find_Index(byte)];
         temp->next = cur_node;
         cur_node = temp;
     }
 
-    inline void* alloc::reallocate(void* p, size_t old_size, size_t new_size)
+    inline void* alloc::reallocate(void* p, size_t old_byte, size_t new_byte)
     {
-        alloc::deallocate(p, old_size);
-        p = alloc::allocate(new_size);
+        alloc::deallocate(p, old_byte);
+        p = alloc::allocate(new_byte);
         return p;
     }
 
@@ -153,9 +153,9 @@ namespace MessySTL
         return result;
     }
 
-    inline char* alloc::Chunk_alloc(size_t size, size_t& nobj)
+    inline char* alloc::Chunk_alloc(size_t byte, size_t& nobj)
     {
-        size_t total_byte = size * nobj;
+        size_t total_byte = byte * nobj;
         size_t byte_left = m_pStart - m_pEnd;
         char* result = m_pStart;
         if (byte_left >= total_byte)
@@ -163,11 +163,11 @@ namespace MessySTL
             m_pStart += total_byte;
             return result;
         }
-        else if (byte_left >= size)
+        else if (byte_left >= byte)
         {
             // how many blocks can be allocated.
-            nobj = byte_left / size;
-            total_byte = nobj * size;
+            nobj = byte_left / byte;
+            total_byte = nobj * byte;
             m_pStart += total_byte;
             return result;
         }
@@ -189,7 +189,7 @@ namespace MessySTL
                 
                 Free_list* current_node, *p;
                 // Search memory on the right nodes. if size is 80, then we search 88, 96...
-                for (size_t i = size; i <= E_MAX_BYTE::MAX_BYTE; i += E_Align::ALIGN)
+                for (size_t i = byte; i <= E_MAX_BYTE::MAX_BYTE; i += E_Align::ALIGN)
                 {
                     current_node = m_free_list[Find_Index(i)];
                     if (current_node != nullptr)
@@ -198,7 +198,7 @@ namespace MessySTL
                         m_pEnd = m_pStart+ i;
                         p = current_node;
                         current_node = current_node->next;
-                        return (Chunk_alloc(size, nobj));
+                        return (Chunk_alloc(byte, nobj));
                     }
                 }
                 printf("out of memory");
@@ -207,7 +207,7 @@ namespace MessySTL
             }
             m_sTotal_heap_size += byte_to_get;
             m_pEnd = m_pStart + byte_to_get;
-            return (Chunk_alloc(size, nobj));
+            return (Chunk_alloc(byte, nobj));
         }
 
     }

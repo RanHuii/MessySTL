@@ -37,25 +37,19 @@ namespace MessySTL
    
 
     template<class T>
-    void deallocate(T* p)
-    {
-        operator delete(p);
-    }
-
-    template<class T>
     inline T* allocator<T>::allocate()
     {
         return static_cast<T*> (operator new(sizeof(T)));
     }
 
     template<class T>
-    inline T* allocator<T>::allocate(size_type n)
+    inline T* allocator<T>::allocate(size_type num_of_obj)
     {
-        if (n == 0)
+        if (num_of_obj == 0)
         {
             return nullptr;
         }
-        return static_cast<T*>(operator new(n * sizeof(T)));
+        return static_cast<T*>(operator new(num_of_obj * sizeof(T)));
     }
 
     template<class T>

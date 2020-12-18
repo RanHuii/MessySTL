@@ -28,6 +28,11 @@ namespace MessySTL
         return static_cast<T*>(alloc::allocate(sizeof(T)));
     }
 
+    /*
+    * Take in a number of item
+    * calculate the total bytes needed
+    * and pass to allocate which takes byte
+    */
     template<class T>
     inline T* pool_alloc<T>::allocate(size_t n)
     {
