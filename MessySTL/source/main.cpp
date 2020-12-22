@@ -36,11 +36,20 @@ template <class T> void fn(T&& x) {
 
 int main()
 {
+#if 0
+
+#endif
     typedef MessySTL::pool_alloc<int> alloc;
+
     MessySTL::vector<int, MessySTL::pool_alloc<int>> vec;
-    MessySTL::vector<int, MessySTL::pool_alloc<int>> vec1(3);
+    MessySTL::vector<int, MessySTL::pool_alloc<int>> vec1(3,2);
 
     MessySTL::vector<int, MessySTL::pool_alloc<int>>::iterator it = vec1.begin();
-    std::cout << vec1.size() << std::endl;
-    std::cout << *it << std::endl;
+   
+    MessySTL::vector<int, MessySTL::pool_alloc<int>> copy_vec = vec1;
+    MessySTL::vector<int, MessySTL::pool_alloc<int>> move_vec(MessySTL::vector<int, MessySTL::pool_alloc<int>>(3, 5));
+
+    copy_vec.print();
+    move_vec.print();
+    std::cout << copy_vec.size() << std::endl;
 }

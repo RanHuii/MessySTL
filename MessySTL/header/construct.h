@@ -4,6 +4,7 @@
 
 #include <new>
 #include "type_traits.h"
+#include "iterator_base.h"
 /*
 * This class only contains construct and destroy function
 * It has different versions of construct and destroy function for different cases 
@@ -37,6 +38,14 @@ namespace MessySTL {
         pointer->~T(); //used destructor ~T()
     }
 
+    // Forward declaration
+    template<class ForwardIterator, class T>
+    void _destroy(ForwardIterator first, ForwardIterator last, T*);
+    template<class ForwardIterator>
+    void _destroy_aux(ForwardIterator first, ForwardIterator last, _true_type);
+    template<class ForwardIterator>
+    void _destroy_aux(ForwardIterator first, ForwardIterator last, _false_type);
+
     /// <summary>
     /// This version of destroy function deconstruct a lists of
     /// objects within the range of two iterators.
@@ -47,10 +56,10 @@ namespace MessySTL {
     template<class ForwardIterator>
     void destroy(ForwardIterator first, ForwardIterator last)
     {
-        _destroy(first, last, value_type(first)); // value_type() return temporary object -> A pointer 
+        _destroy(first, last, value_type(first)); // value_type() return temporary object -> a pointer 
     }
 
-    template<class ForwardIterator, typename T>
+    template<class ForwardIterator, class T>
     void _destroy(ForwardIterator first, ForwardIterator last, T*)
     {
         typedef typename _type_traits<T>::has_trivial_destructor trivial_destructor; 

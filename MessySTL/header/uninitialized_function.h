@@ -10,7 +10,24 @@
 /// </summary>
 namespace MessySTL
 {
+    //forward declaration
+    template<class Input_iterator, class Forward_iterator>
+    Forward_iterator
+        uninitialized_copy(Input_iterator first, Input_iterator last, Forward_iterator result);
 
+    template<class Input_iterator, class Forward_iterator, class T>
+    Forward_iterator
+        uninitialized_copy(Input_iterator first, Input_iterator last, Forward_iterator result, T*);
+
+    template<class Input_iterator, class Forward_iterator>
+    Forward_iterator
+        uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _true_type);
+
+    template<class Input_iterator, class Forward_iterator>
+    Forward_iterator
+        uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _false_type);
+
+    // uninitialized_copy
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         uninitialized_copy(Input_iterator first, Input_iterator last, Forward_iterator result)
@@ -23,14 +40,14 @@ namespace MessySTL
         uninitialized_copy(Input_iterator first, Input_iterator last, Forward_iterator result, T*) // why value type doesn't return the actually type but a pointer to the type
     {
         typedef _type_traits<T>::is_POD_type is_POD_type;
-        return unintialized_copy_aux(first, last, result, is_POD_type());
+        return uninitialized_copy_aux(first, last, result, is_POD_type());
     }
 
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _true_type)
     {
-        MessySTL::copy(first, last, result);
+        return MessySTL::copy(first, last, result);
     }
 
     template<class Input_iterator, class Forward_iterator>

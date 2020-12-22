@@ -48,4 +48,10 @@ namespace MessySTL
         
         return result + (last - first);
     }
+
+    template<class T>
+    T&& move(T value)
+    {
+        return &value;
+    }
 }

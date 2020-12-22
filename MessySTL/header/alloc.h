@@ -64,7 +64,7 @@ namespace MessySTL
     // round up bytes to a multiple of 8
 	inline size_t alloc::Round_up(size_t bytes)
 	{
-		return (bytes + E_Align::ALIGN - 1) & (~E_Align::ALIGN - 1);
+		return (bytes + E_Align::ALIGN - 1) & (~(E_Align::ALIGN - 1));
 	};
 
     // Find index in the free_list given a byte
