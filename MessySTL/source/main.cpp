@@ -48,7 +48,7 @@ int main()
    
     MessySTL::vector<int, MessySTL::pool_alloc<int>> copy_vec = vec1;
     MessySTL::vector<int, MessySTL::pool_alloc<int>> move_vec(MessySTL::vector<int, MessySTL::pool_alloc<int>>(3, 5));
-
+    move_vec.push_back(4);
     copy_vec.print();
     move_vec.print();
     std::cout << copy_vec.size() << std::endl;

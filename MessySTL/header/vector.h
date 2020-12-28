@@ -26,13 +26,14 @@ namespace MessySTL
         iterator _end_of_storage;
 
     private:
+    // helper function
         void deallocate()
         {
             if (_start)
                 data_allocator::deallocate(_start, _end_of_storage - _start);
         }
 
-        void destory_n_deallocate()
+        void destroy_and_deallocate()
         {
             data_allocator::destroy(_start, _finish);
             deallocate();
@@ -49,6 +50,9 @@ namespace MessySTL
             uninitialized_fill_n(result, n, value);
             return result;
         }
+        
+        // reallocate
+        void      reallocate_insert(iterator pos, const value_type& value);
     public:
         //resue print function
         void print() const
@@ -97,19 +101,31 @@ namespace MessySTL
         }
         ~vector()
         {
-            destory_n_deallocate();
+            destroy_and_deallocate();
         }
         // to do 
         vector& operator=(const vector& other)
         {
             // optimize case
             // compare size of this and other
+            
             if (this != &other)
             {
-                destory_n_deallocate();
-                data_allocator::allocate(_start, other._end_of_storage - other._start);
-                uninitialized_copy(other._start, other._finish, _start);
-                _finish = _start + (other._finish - other._start);
+                if (this->capacity() >= other.size())
+                {
+                    data_allocator::destroy(_start, _finish);
+                    uninitialized_copy(other._start, other._finish, _start);
+                    _finish = _start + other.size();
+                }
+                else
+                {
+                    destroy_and_deallocate();
+                    _start = data_allocator::allocate(_start, other.capacity());
+                    uninitialized_copy(other._start, other._finish, _start);
+                    _finish =  _start + other.size();
+                    _end_of_storage = _start + other.capacity();
+
+                }
             }
 
             return *this;
@@ -121,7 +137,7 @@ namespace MessySTL
 
             if (this != &other)
             {
-                destory_n_deallocate();
+                destroy_and_deallocate();
 
                 _start = other._start;
                 _finish = other._finish;
@@ -173,9 +189,57 @@ namespace MessySTL
     public:
         void push_back(const value_type& x)
         {
-
+            if (_finish != _end_of_storage)
+            {
+                MessySTL::construct(_finish, x);
+                ++_finish;
+            }
+            else
+            {
+                reallocate_insert(end(), x);
+            }
+            
         }
 
     };
+    template<class T, class Alloc>
+    inline void vector<T, Alloc>::reallocate_insert(iterator pos, const value_type& value)
+    {
+        // needed by insert function
+        // to do
+        // implement copy and move utility function
+        if (_finish != _end_of_storage)
+        {
+            MessySTL::construct(_finish, value);
+            ++_finish;
+        }
+        else
+        {
+            size_type old_size = size();
+            size_type new_size = (old_size == 0) ? 1 : 2 * old_size;
+
+            iterator _new_start = data_allocator::allocate(new_size);
+            iterator _new_end = _new_start;
+
+            try
+            {
+                _new_end = uninitialized_copy(_start, _finish, _new_start);
+                construct(_new_end, value);
+                ++_new_end;
+                
+                // needed by insert
+                _new_end = uninitialized_copy(pos, _finish, _new_end);
+            }
+            catch (...)
+            {
+                data_allocator::deallocate(_new_start, new_size);
+                throw;
+            }
+            destroy_and_deallocate();
+            _start = _new_start;
+            _finish = _new_end;
+            _end_of_storage = _start + new_size;
+        }
+    }
 }
 

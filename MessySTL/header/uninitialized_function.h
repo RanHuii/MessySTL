@@ -50,6 +50,16 @@ namespace MessySTL
         return MessySTL::copy(first, last, result);
     }
 
+    /// <summary>
+    /// Return iterator pointed to one passed the last item.
+    /// </summary>
+    /// <typeparam name="Input_iterator"></typeparam>
+    /// <typeparam name="Forward_iterator"></typeparam>
+    /// <param name="first"></param>
+    /// <param name="last"></param>
+    /// <param name="result"></param>
+    /// <param name=""></param>
+    /// <returns></returns>
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _false_type)
