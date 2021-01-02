@@ -28,6 +28,10 @@ namespace MessySTL
         uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _false_type);
 
     // uninitialized_copy
+
+    /*
+    * Return iterator to the element pass the last element copied.
+    */
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         uninitialized_copy(Input_iterator first, Input_iterator last, Forward_iterator result)
@@ -50,16 +54,7 @@ namespace MessySTL
         return MessySTL::copy(first, last, result);
     }
 
-    /// <summary>
-    /// Return iterator pointed to one passed the last item.
-    /// </summary>
-    /// <typeparam name="Input_iterator"></typeparam>
-    /// <typeparam name="Forward_iterator"></typeparam>
-    /// <param name="first"></param>
-    /// <param name="last"></param>
-    /// <param name="result"></param>
-    /// <param name=""></param>
-    /// <returns></returns>
+   
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         uninitialized_copy_aux(Input_iterator first, Input_iterator last, Forward_iterator result, _false_type)
@@ -74,6 +69,10 @@ namespace MessySTL
     }
 
     // uninitialized_fill
+
+    /*
+    * uninitialized_fill doesn't return anything
+    */
     template<class Forward_iterator, class T>
     void
     uninitialized_fill(Forward_iterator first, Forward_iterator last, const T& value)
@@ -135,6 +134,9 @@ namespace MessySTL
     Forward_iterator
         uninitialized_fill_n_aux(Forward_iterator first, Size n, const T& value, _false_type);
 
+    /*
+    * Return iterator to the element pass the last element copied.
+    */
     template<class Forward_iterator, class Size, class T>
     Forward_iterator
     uninitialized_fill_n(Forward_iterator first, Size n, const T& value)

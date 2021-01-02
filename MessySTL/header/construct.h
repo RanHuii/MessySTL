@@ -32,6 +32,11 @@ namespace MessySTL {
         new(p) T1(value);
     }
 
+    template <class T, class... Args>
+    void constructor(T* p, Args&&... args)
+    {
+        new (p) T(std::forward<Args>(args)...);
+    }
     template<class T>
     void destroy(T* pointer)
     {

@@ -3,6 +3,15 @@
 #include "iterator_base.h"
 namespace MessySTL
 {
+    template<class Forward_iterator, class T>
+    void fill(Forward_iterator first, Forward_iterator last, const T& value)
+    {
+        for (; first != last; ++first)
+        {
+            *first = value;
+        }
+    }
+
     template<class Forward_iterator, class Size, class T>
     Forward_iterator
         fill_n(Forward_iterator first, Size count, const T& value)
@@ -14,6 +23,7 @@ namespace MessySTL
         return first;
     }
 
+    // return the iterator one passed the last element
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
         copy(Input_iterator first, Input_iterator last, Forward_iterator result)
@@ -49,9 +59,18 @@ namespace MessySTL
         return result + (last - first);
     }
 
-    template<class T>
-    T&& move(T value)
-    {
-        return &value;
-    }
+    /*
+    * Copies the elements in the range [first, last) starting from the end into the range terminating at result
+    */
+   template<class BidirectionalItertor1, class BidirectionalIterator2>
+   BidirectionalIterator2 copy_backward(BidirectionalItertor1 first,
+       BidirectionalItertor1 last,
+       BidirectionalIterator2 result)
+   {
+       while (last != first)
+       {
+           *(--result) = *(--last);
+           return result;
+       }
+   }
 }

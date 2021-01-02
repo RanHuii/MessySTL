@@ -3,6 +3,7 @@
 #include "../header/iterator_base.h"
 #include "../header/construct.h"
 #include "../header/pool_alloc.h"
+#include "../header/util.h"
 
 struct A
 {
@@ -34,6 +35,9 @@ template <class T> void fn(T&& x) {
 }
 
 
+template<class T>
+void f(T&& param);
+
 int main()
 {
 #if 0
@@ -51,5 +55,9 @@ int main()
     move_vec.push_back(4);
     copy_vec.print();
     move_vec.print();
-    std::cout << copy_vec.size() << std::endl;
+    std::cout << &move_vec << std::endl;
+
+    int a = 9;
+    const int& a_ref = a;
+  
 }

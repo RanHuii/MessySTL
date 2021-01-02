@@ -42,6 +42,12 @@
     <ClInclude Include="header\pool_alloc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\exceptdef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
