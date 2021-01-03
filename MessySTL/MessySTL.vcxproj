@@ -150,6 +150,8 @@
     <ClInclude Include="header\uninitialized_function.h" />
     <ClInclude Include="header\util.h" />
     <ClInclude Include="header\vector.h" />
+    <ClInclude Include="test\test.h" />
+    <ClInclude Include="test\vector_test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp" />

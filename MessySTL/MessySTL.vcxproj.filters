@@ -48,6 +48,12 @@
     <ClInclude Include="header\exceptdef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test\vector_test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test\test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">

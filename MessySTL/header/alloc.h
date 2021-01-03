@@ -6,12 +6,12 @@ namespace MessySTL
 {
 	enum E_Align
 	{
-		ALIGN = 8
+		ALIGN = 16
 	};
 
 	enum E_MAX_BYTE
 	{
-		MAX_BYTE = 128
+		MAX_BYTE = 256
 	};
 
 	enum E_LIST_NUM
@@ -77,21 +77,22 @@ namespace MessySTL
     // If bytes is greater than the maximum size of bytes, use std::allocate
     inline void* alloc::allocate(size_t byte)
 	{
-        
+        Free_list* my_free_list;
+        Free_list* result;
 		if (byte > E_MAX_BYTE::MAX_BYTE)
 		{
 			return std::malloc(byte);
 		}
-        Free_list* current_node = m_free_list[Find_Index(byte)];
+        my_free_list = m_free_list[Find_Index(byte)];
 
-        Free_list* result = current_node;
-        if (current_node == nullptr)
+        result = my_free_list;
+        if (result == nullptr)
         {
             void* r = Refill(Round_up(byte));
             return r;
         }
 
-        current_node = result->next;
+        my_free_list = result->next;
         return (void*)result;
 	}
 
@@ -104,8 +105,10 @@ namespace MessySTL
             return;
         }
 
-        Free_list* temp = (Free_list*)p;
-        Free_list* cur_node = m_free_list[Find_Index(byte)];
+        // attached the freed memory to the linkedlist under certain index
+        Free_list* temp = reinterpret_cast<Free_list*>(p);
+        Free_list* cur_node;
+        cur_node = m_free_list[Find_Index(byte)];
         temp->next = cur_node;
         cur_node = temp;
     }

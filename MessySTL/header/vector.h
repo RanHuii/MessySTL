@@ -1,12 +1,13 @@
 #pragma once
 
 #include "pool_alloc.h"
+#include "allocator.h"
 #include "uninitialized_function.h"
 #include "exceptdef.h"
 
 namespace MessySTL
 {
-    template<class T, class Alloc = pool_alloc<T>>
+    template<class T, class Alloc = allocator<T> >
     class vector
     {
     public:
@@ -157,21 +158,13 @@ namespace MessySTL
         // iterator operation
     public:
         iterator begin() 
-        { 
-            return _start; 
-        }
+        { return _start; }
         iterator end() 
-        { 
-            return _finish; 
-        }
+        { return _finish;  }
         iterator cbegin() const 
-        { 
-            return _start; 
-        }
+        { return _start; }
         iterator cend() const 
-        {
-            return _finish;
-        }
+        { return _finish; }
 
         // container operation
     public:
@@ -181,7 +174,7 @@ namespace MessySTL
         }
         size_type capacity() const
         {
-            return (size_type)(_end_of_storage - _start);
+            return size_type(_end_of_storage - _start);
         }
         bool empty() const
         {
@@ -266,34 +259,41 @@ namespace MessySTL
         
         void pop_back();
       
-
         iterator erase(iterator first, iterator last);
         iterator erase(iterator position);
       
 
-        void insert(const_iterator position, const value_type& val);
+        void insert(iterator position, const value_type& val);
         
         void insert(iterator position, size_type n, const value_type& value);
        
         template <class... Args>
         iterator emplace(const_iterator position, Args&&... args);
+
+
+        // comparison
+        bool operator==(const vector& other)
+        {
+            if (this->size() == other.size())
+            {
+
+            }
+        }
        
 
     };
     template<class T, class Alloc>
     void vector<T, Alloc>::reallocate_insert(iterator pos, const value_type& value)
     {
-        // needed by insert function
-        // to do
-        // implement copy and move utility function
+        
         if (_finish != _end_of_storage)
         {
             construct(_finish, *(_finish - 1));
             ++_finish;
-
+            T value_copy = value;
             //_finish + 2 may failed if _finish + 1 = _end_of_storage
             MessySTL::copy_backward(pos, _finish - 2, _finish - 1);
-            *pos = value;
+            *pos = value_copy;
         }
         else
         {
@@ -361,7 +361,7 @@ namespace MessySTL
 
     // to do
     template<class T, class Alloc>
-    void vector<T, Alloc>::insert(const_iterator position, const value_type& val)
+    void vector<T, Alloc>::insert(iterator position, const value_type& val)
     {
         reallocate_insert(position, val);
     }
@@ -373,7 +373,7 @@ namespace MessySTL
     {
         if (n != 0)
         {
-            MESSY_ASSERT(position < end() && position >= begin());
+            MESSY_ASSERT(position <= end() && position >= begin());
             // if backup storage greater than new elements
             size_type back_up = _end_of_storage - _finish;
             if (back_up >= n)
@@ -400,7 +400,7 @@ namespace MessySTL
             }
             else
             {
-                const size_type old_size = size();
+                const size_type old_size = capacity();
                 const size_type new_size = old_size == 0 ? 1 : old_size * 2;
                 iterator new_start = data_allocator::allocate(new_size);
                 iterator new_finish = new_start;
@@ -414,11 +414,11 @@ namespace MessySTL
                 catch (...)
                 {
                     // commit or rollback
-                    data_allocator::deallocate(_new_start, new_size);
+                    data_allocator::deallocate(new_start, new_size);
                     throw;
                 }
 
-                destroy_and_deallocate(_start, _finish);
+                destroy_and_deallocate();
                 _start = new_start;
                 _finish = new_finish;
                 _end_of_storage = _start + new_size;

@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <cassert>
+
 namespace MessySTL
 {
 
