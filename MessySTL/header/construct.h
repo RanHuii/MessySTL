@@ -5,6 +5,7 @@
 #include <new>
 #include "type_traits.h"
 #include "iterator_base.h"
+#include "util.h"
 /*
 * This class only contains construct and destroy function
 * It has different versions of construct and destroy function for different cases 
@@ -32,10 +33,17 @@ namespace MessySTL {
         new(p) T1(value);
     }
 
+    template <class T>
+    void constructor(T* p, T&& val)
+    {
+        std::cout << "move constructor is called in construct.h" << std::endl;
+        new (p) T(MessySTL::forward<T>(val));
+    }
+
     template <class T, class... Args>
     void constructor(T* p, Args&&... args)
     {
-        new (p) T(std::forward<Args>(args)...);
+        new (p) T(MessySTL::forward<Args>(args)...);
     }
     template<class T>
     void destroy(T* pointer)

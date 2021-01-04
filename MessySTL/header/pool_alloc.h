@@ -66,6 +66,7 @@ namespace MessySTL
     template<class T>
     inline void pool_alloc<T>::construct(T* ptr, T&& value)
     {
+        MessySTL::construct(ptr, value);
     }
     template<class T>
     inline void pool_alloc<T>::destroy(T* ptr)

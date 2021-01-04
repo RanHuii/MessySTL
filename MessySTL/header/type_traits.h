@@ -3,6 +3,9 @@
 #ifndef _TYPE_TRAITS_H
 #define _TYPE_TRAITS_H
 
+// use standard header for type_traits
+#include <type_traits>
+
 namespace MessySTL
 {
     // tag types
@@ -20,6 +23,7 @@ namespace MessySTL
     * to call the constructor.
     * 
     */
+
 
     /// <summary>
     /// Use _false_type as the default type

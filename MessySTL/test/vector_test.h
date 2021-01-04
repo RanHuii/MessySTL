@@ -31,13 +31,11 @@ namespace MessySTL
                 int_vector v8, v9, v10;
 
                 int_vector v1;
-                v1.push_back(6);
                 v1.push_back(2);
-                
-                std::cout << std::endl;
+                FUN_AFTER(v1, v1.push_back(6));
+                FUN_AFTER(v1, v1.insert(v1.end(), 6));
 
-                MessySTL::test::print_container(v1);
-                FUN_AFTER(v1, v1.begin());
+                FUN_AFTER(v1, v1.insert(v1.begin(), 2, 3));
                 /*FUN_AFTER(v1, v1.push_back(6));
                 FUN_AFTER(v1, v1.push_back(6));
                 FUN_AFTER(v1, v1.end());
