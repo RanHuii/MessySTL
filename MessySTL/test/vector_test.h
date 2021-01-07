@@ -32,9 +32,10 @@ namespace MessySTL
 
                 int_vector v1;
                 v1.push_back(2);
+                FUN_AFTER(v1, v1.assign(3, 2));
+                
                 FUN_AFTER(v1, v1.push_back(6));
                 FUN_AFTER(v1, v1.insert(v1.end(), 6));
-
                 FUN_AFTER(v1, v1.insert(v1.begin(), 2, 3));
                 /*FUN_AFTER(v1, v1.push_back(6));
                 FUN_AFTER(v1, v1.push_back(6));

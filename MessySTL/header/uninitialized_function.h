@@ -175,6 +175,15 @@ namespace MessySTL
     // use type_trait defined in standard library
     // uninitialized_move
     // Return value: Iterator to the element past the last element moved.
+
+    template<class Input_iterator, class Forward_iterator>
+    Forward_iterator uninitialized_move_aux(Input_iterator first, Input_iterator last, Forward_iterator result,
+        std::true_type);
+
+    template<class Input_iterator, class Forward_iterator>
+    Forward_iterator uninitialized_move_aux(Input_iterator first, Input_iterator last, Forward_iterator result,
+        std::false_type);
+
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator uninitialized_move(Input_iterator first, Input_iterator last, Forward_iterator result)
     {
@@ -198,7 +207,7 @@ namespace MessySTL
     Forward_iterator uninitialized_move_aux(Input_iterator first, Input_iterator last, Forward_iterator result,
         std::false_type)
     {
-        ForwardIter cur = result;
+        Forward_iterator cur = result;
 
         for (; first != last; ++first, ++cur)
         {

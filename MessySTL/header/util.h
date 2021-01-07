@@ -27,14 +27,14 @@ namespace MessySTL
 
     template<class T>
     T&& 
-        forward(typename std::remove_reference<T>& param) noexcept // forward an lvalue as either an lvalue or an rvalue
+        forward(typename std::remove_reference<T>::type& param) noexcept // forward an lvalue as either an lvalue or an rvalue
     {
         return static_cast<T&&>(param); 
     }
 
     template<class T>
     T&&
-        forward(typename std::remove_reference<T>&& param) noexcept // forward an rvalue as an rvalue
+        forward(typename std::remove_reference<T>::type&& param) noexcept // forward an rvalue as an rvalue
     {
         static_assert(!std::is_lvalue_reference<T>::value, "bad forward call"); 
         return static_cast<T&&>(param);

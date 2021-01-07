@@ -18,6 +18,9 @@ namespace MessySTL
         static void construct(T* ptr, const T& value);
         static void construct(T* ptr, T&& value);
 
+        template<class ...Args>
+        static void construct(T* ptr, Args&& ...args);
+
         static void destroy(T* ptr);
         static void destroy(T* first, T* last);
     };
@@ -67,6 +70,13 @@ namespace MessySTL
     inline void pool_alloc<T>::construct(T* ptr, T&& value)
     {
         MessySTL::construct(ptr, value);
+    }
+
+    template<class T>
+    template<class... Args>
+    inline void pool_alloc<T>::construct(T* ptr, Args&&... args)
+    {
+        MessySTL::construct(ptr, MessySTL::forward<Args>(args)...);
     }
     template<class T>
     inline void pool_alloc<T>::destroy(T* ptr)

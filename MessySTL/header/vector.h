@@ -44,7 +44,7 @@ namespace MessySTL
         void destroy_and_deallocate(iterator first, iterator last)
         {
             data_allocator::destroy(first, last);
-            deallocate(first, n);
+            deallocate();
         }
 
         void fill_initialize(size_type n, const value_type& value)
@@ -64,6 +64,8 @@ namespace MessySTL
         void reallocate_insert(iterator pos, const value_type& value);
         void reallocate_fill(size_type n, const value_type& value);
         void reallocate_emplace(iterator pos, T&& value);
+        template<class ...Args>
+        void reallocate_emplace(iterator pos, Args&& ...args);
     public:
         //resue print function
         void print() const
@@ -369,7 +371,7 @@ namespace MessySTL
         try
         {
             new_finish = uninitialized_move(_start, pos, new_start);
-            data_allocator::construct(new_finish, MessySTL::forward(value));
+            data_allocator::construct(new_finish, MessySTL::forward<T>(value));
             ++new_finish;
             new_finish = new_finish(pos, _finish, new_finish);
         }
@@ -385,6 +387,34 @@ namespace MessySTL
 
     }
 
+    template<class T, class Alloc>
+    template<class ...Args>
+    void vector<T, Alloc>::reallocate_emplace(iterator pos, Args&& ...args)
+    {
+        size_type old_size = size();
+        size_type new_size = (old_size == 0) ? 1 : 2 * old_size;
+
+        iterator new_start = data_allocator::allocate(new_size);
+        iterator new_finish = new_start;
+
+        try
+        {
+            new_finish = uninitialized_move(_start, pos, new_start);
+            data_allocator::construct(new_finish, MessySTL::forward<Args>(args)...);
+            ++new_finish;
+            new_finish = uninitialized_move(pos, _finish, new_finish);
+        }
+        catch (...)
+        {
+            data_allocator::deallocate(new_start, new_size);
+            throw;
+        }
+        destroy_and_deallocate(_start, _finish);
+        _start = new_start;
+        _finish = new_finish;
+        _end_of_storage = _start + new_size;
+    }
+
     // to do
     template<class T, class Alloc>
     void vector<T, Alloc>::assign(size_type n, const value_type& val)
@@ -395,9 +425,8 @@ namespace MessySTL
         }
         else
         {
-            data_allocator::destroy(_start, size());
-            _finish = _start;
-            uninitialized_fill_n(_start, n, val);
+            data_allocator::destroy(_start, _finish);
+            _finish = uninitialized_fill_n(_start, n, val);
         }
 
     }
@@ -574,7 +603,12 @@ namespace MessySTL
     {
         if (_finish < _end_of_storage)
         {
-            data_allocator::construct()
+            data_allocator::construct(_finish, args...);
+            ++_finish;
+        }
+        else
+        {
+            reallocate_emplace(_finish, args...);
         }
     }
 }
