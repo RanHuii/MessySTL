@@ -70,7 +70,7 @@ namespace MessySTL
        while (last != first)
        {
            *(--result) = *(--last);
-           return result;
        }
+       return result;
    }
 }

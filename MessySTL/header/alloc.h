@@ -6,12 +6,12 @@ namespace MessySTL
 {
 	enum E_Align
 	{
-		ALIGN = 16
+		ALIGN = 8
 	};
 
 	enum E_MAX_BYTE
 	{
-		MAX_BYTE = 256
+		MAX_BYTE = 128
 	};
 
 	enum E_LIST_NUM

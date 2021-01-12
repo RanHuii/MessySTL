@@ -298,12 +298,24 @@ namespace MessySTL
         
         if (_finish != _end_of_storage)
         {
-            construct(_finish, *(_finish - 1));
-            ++_finish;
-            T value_copy = value;
-            //_finish + 2 may failed if _finish + 1 = _end_of_storage
-            MessySTL::copy_backward(pos, _finish - 2, _finish - 1);
-            *pos = value_copy;
+            // if pos == _finish, last < first while using copy_backward
+            // handle it here
+            if (pos == _finish)
+            {
+                data_allocator::construct(_finish, value);
+                ++_finish;
+            }
+            else
+            {
+                data_allocator::construct(_finish, *(_finish - 1));
+                ++_finish;
+
+                T value_copy = value;
+                //_finish + 2 may failed if _finish + 1 = _end_of_storage
+                MessySTL::copy_backward(pos, _finish - 2, _finish - 1);
+                *pos = value_copy;
+            }
+            
         }
         else
         {
