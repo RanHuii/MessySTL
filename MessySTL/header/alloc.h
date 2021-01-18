@@ -6,12 +6,14 @@ namespace MessySTL
 {
 	enum E_Align
 	{
-		ALIGN = 8
+        // Align 8 doesn't work when passing iterator as parameter
+        // I think that is because compiler needs space for overhead.
+		ALIGN = 16
 	};
 
 	enum E_MAX_BYTE
 	{
-		MAX_BYTE = 128
+		MAX_BYTE = 256
 	};
 
 	enum E_LIST_NUM

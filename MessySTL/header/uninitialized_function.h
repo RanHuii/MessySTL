@@ -30,7 +30,8 @@ namespace MessySTL
     // uninitialized_copy
 
     /*
-    * Return iterator to the element pass the last element copied.
+    * Constructs copies of the elements in the range [first,last) into a range beginning at result 
+    * returns an iterator to the last element in the destination range.
     */
     template<class Input_iterator, class Forward_iterator>
     Forward_iterator
@@ -96,7 +97,7 @@ namespace MessySTL
         difference_type n = last - first;
         if (n > 0)
         {
-            return std::fill(first, last, value);
+            return fill<forward, T>(first, last, value);
         }
     }
 
@@ -110,7 +111,7 @@ namespace MessySTL
         {
             for (;first != last; ++first)
             {
-                constructor(&*first, value);
+                MessySTL::constructor(&*first, value);
             }
         }
         
