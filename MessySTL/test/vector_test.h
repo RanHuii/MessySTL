@@ -25,11 +25,8 @@ namespace MessySTL
                 int_vector v2(10);
                 int_vector v3(10, 1);
                 int_vector v5(v2);
-                int_vector v6(std::move(v2));
-                
-            
-
-
+                int_vector v6(MessySTL::move(v2));
+                const int_vector v8(3, 1);
                 FUN_AFTER(v1, v1.push_back(2));
                 FUN_AFTER(v1, v1.assign(3, 2));
                 FUN_AFTER(v1, v1.push_back(6));
@@ -48,15 +45,29 @@ namespace MessySTL
                 FUN_AFTER(v2, v2.emplace(v2.begin(), 0));
                 FUN_AFTER(v2, v2.emplace_back((2)));
                 
-                /*FUN_AFTER(v1, v1.push_back(6));
-                FUN_AFTER(v1, v1.push_back(6));
-                FUN_AFTER(v1, v1.end());
-                FUN_AFTER(v1, v1.begin());*/
-
+                v6 = MessySTL::move(v2);
+                FUN_VALUE(v6.size());
+                FUN_VALUE(v2.size());
+                FUN_VALUE(*v6.begin());
+                FUN_VALUE(v6.front());
+                v6.front() += v6.back();
+                v6.back() += v6.front();
+                FUN_VALUE(v6.front());
+                FUN_VALUE(v6.back());
+                FUN_VALUE(v6.at(0));
                 
-                // FUN_AFTER(v1, v1.insert(v1.end(), 7));
+                std::cout << "Before changing v3.data(): " << std::endl;
+                COUT(v3);
+                int* p = v3.data();
+                *p = 10;
+                *++p = 20;
+                p[1] = 30;
+                std::cout << "After changing v3.data(): " << std::endl;
+                COUT(v3);
+                FUN_VALUE(v8.front());
+                FUN_VALUE(v8.back());
+                FUN_VALUE(v8.size());
 
-                // FUN_AFTER(v1, v1.insert(v1.begin() + 1, 2, 3));
 
             }
         }

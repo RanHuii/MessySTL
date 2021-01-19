@@ -146,6 +146,7 @@
     <ClInclude Include="header\construct.h" />
     <ClInclude Include="header\exceptdef.h" />
     <ClInclude Include="header\iterator_base.h" />
+    <ClInclude Include="header\list.h" />
     <ClInclude Include="header\pool_alloc.h" />
     <ClInclude Include="header\type_traits.h" />
     <ClInclude Include="header\uninitialized_function.h" />
