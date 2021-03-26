@@ -111,7 +111,7 @@ namespace MessySTL
         {
             for (;first != last; ++first)
             {
-                MessySTL::constructor(&*first, value);
+                MessySTL::construct(&*first, value);
             }
         }
         
@@ -212,7 +212,7 @@ namespace MessySTL
 
         for (; first != last; ++first, ++cur)
         {
-            MessySTL::constructor(&*cur, MessySTL::move(*first));
+            MessySTL::construct(&*cur, MessySTL::move(*first));
         }
         return cur;
     }

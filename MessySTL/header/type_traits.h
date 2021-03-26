@@ -37,7 +37,9 @@ namespace MessySTL
         typedef _false_type     has_trivial_copy_constructor;
         typedef _false_type     has_trivial_assignment_operator;
         typedef _false_type     has_trivial_destructor;
-        typedef _false_type     is_POD_type; // Plain old Data, a class without constructors, destructors, and virtual members
+        typedef _false_type     is_POD_type; // Plain old Data, a class without 
+                                             // explicit constructors, destructors, copy/move constructor and operator
+                                             // and virtual members
 
     };
     // Provide some specializations

@@ -34,14 +34,14 @@ namespace MessySTL {
     }
 
     template <class T>
-    void constructor(T* p, T&& val)
+    void construct(T* p, T&& val)
     {
         std::cout << "move constructor is called in construct.h" << std::endl;
         new (p) T(MessySTL::forward<T>(val));
     }
 
     template <class T, class... Args>
-    void constructor(T* p, Args&&... args)
+    void construct(T* p, Args&&... args)
     {
         new (p) T(MessySTL::forward<Args>(args)...);
     }

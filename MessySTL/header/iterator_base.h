@@ -67,10 +67,10 @@ namespace MessySTL {
     /// <typeparam name="Pointer"></typeparam>
     /// <typeparam name="Reference"></typeparam>
     template<class Category,
-        class T,
-        class Distance,
-        class Pointer,
-        class Reference>
+             class T,
+             class Distance,
+             class Pointer,
+             class Reference>
         struct iterator {
         typedef Category iterator_category;
         typedef T        value_type;
